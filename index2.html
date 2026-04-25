@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawaia Guide - AI Assistant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #000428 0%, #004e92 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            
+        }
+
+        .container {
+            background: #0a0e27;
+            border-radius: 30px;
+            padding: 60px 40px;
+            max-width: 420px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .header {
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .header h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .header h2 .your-text {
+            color: white;
+        }
+
+        .header h2 .ai-text {
+            color: #ff8c42;
+        }
+
+        .subtitle {
+            color: #a8b2d1;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .logo-container {
+            margin: 60px 0;
+            position: relative;
+        }
+
+        .logo {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 30px;
+            position: relative;
+        }
+
+        .logo-shape {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1e5aff 0%, #00d4ff 100%);
+            border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%;
+            position: relative;
+            animation: morph 8s ease-in-out infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-icon {
+            width: 100%;
+            height: 100%;
+            background-image: url('indexxx.jpeg');
+            background-size: cover;
+            background-position: center;
+            border-radius: inherit;
+            display: block;
+        }
+
+        @keyframes morph {
+            0%, 100% {
+                border-radius: 40% 60% 50% 50% / 60% 40% 60% 40%;
+            }
+            25% {
+                border-radius: 60% 40% 60% 40% / 50% 60% 40% 50%;
+            }
+            50% {
+                border-radius: 50% 50% 40% 60% / 40% 60% 50% 50%;
+            }
+            75% {
+                border-radius: 40% 60% 50% 50% / 60% 50% 50% 40%;
+            }
+        }
+
+        .brand-name {
+            color: #1e8fff;
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .tagline {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        .tagline .your-solution {
+            color: #ff8c42;
+        }
+
+        .tagline .is-here {
+            color: white;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            font-size: 20px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.4);
+            font-family: 'Cairo', sans-serif;
+            width: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(37, 99, 235, 0.6);
+            background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 40px 30px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header h2 {
+                font-size: 28px;
+            }
+
+            .brand-name {
+                font-size: 30px;
+            }
+
+            .logo {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>NAWIA GUIDE</h1>
+            <h2>
+                <span class="your-text">Your </span>
+                <span class="ai-text">AI Assistant</span>
+            </h2>
+            <p class="subtitle">Your smart guide for life</p>
+            <p class="subtitle">at Faculty of Specific Education</p>
+        </div>
+
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-shape">
+                    <div class="logo-icon"></div>
+                </div>
+            </div>
+            <h3 class="brand-name">chat boot</h3>
+            <p class="tagline">
+                <span class="your-solution">Your solution</span>
+                <span class="is-here"> is here</span>
+            </p>
+            <button class="cta-button" onclick="startChat()">Let's Chat Now</button>
+        </div>
+    </div>
+
+    <script>
+        function startChat() {
+            window.location.href = 'chatbot.html';
+        }
+
+        window.addEventListener('load', () => {
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.container').style.transition = 'all 0.6s ease';
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>

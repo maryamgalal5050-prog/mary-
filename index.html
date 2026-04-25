@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWIA GUIDE - تسجيل الدخول</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #000428 0%, #004e92 100%);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            background-image: url('bbbbb.png');
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 4, 40, 0.65);
+            z-index: 0;
+        }
+
+        .container {
+            background: rgba(10, 14, 39, 0.85);
+            backdrop-filter: blur(1px);
+            border-radius: 30px;
+            padding: 45px 40px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(107, 103, 103, 0.6);
+            animation: fadeInUp 0.6s ease-out;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo-section { margin-bottom: 30px; }
+
+        .logo-container {
+            width: 150px; height: 150px;
+            margin: 0 auto 20px;
+        }
+
+        .logo-image {
+            width: 100%; height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));
+        }
+
+        .brand-name {
+            color: #60a5fa;
+            font-size: 30px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+        }
+
+        .tagline {
+            color: #ffffff;
+            font-size: 15px;
+            margin-bottom: 30px;
+            font-weight: 500;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+        }
+
+        .welcome-section { margin-bottom: 25px; }
+
+        .welcome-title {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .welcome-subtitle {
+            color: #e0e7ff;
+            font-size: 14px;
+        }
+
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 25px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            font-family: 'Cairo', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.4);
+        }
+
+        .form-panel { display: none; }
+        .form-panel.active { display: block; }
+
+        .form-group {
+            margin-bottom: 16px;
+            text-align: right;
+        }
+
+        .form-label {
+            display: block;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            color: rgba(255,255,255,0.5);
+            z-index: 1;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 13px 45px 13px 15px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-family: 'Cairo', sans-serif;
+            transition: all 0.3s ease;
+            text-align: right;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #60a5fa;
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 0 0 3px rgba(96,165,250,0.2);
+        }
+
+        .form-input::placeholder { color: rgba(255,255,255,0.5); }
+
+        .password-toggle {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: rgba(255,255,255,0.5);
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .password-toggle:hover { color: #60a5fa; }
+
+        .action-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 17px;
+            font-weight: 700;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(37,99,235,0.4);
+            font-family: 'Cairo', sans-serif;
+            margin-top: 10px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37,99,235,0.6);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: none;
+            text-align: center;
+        }
+
+        .alert.show { display: block; }
+
+        .alert-error {
+            background: rgba(239,68,68,0.15);
+            border: 1px solid rgba(239,68,68,0.4);
+            color: #fca5a5;
+        }
+
+        .alert-success {
+            background: rgba(34,197,94,0.15);
+            border: 1px solid rgba(34,197,94,0.4);
+            color: #86efac;
+        }
+
+        .alert-info {
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.4);
+            color: #93c5fd;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 18px; height: 18px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            vertical-align: middle;
+            margin-left: 8px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .info-text {
+            color: rgba(255,255,255,0.7);
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            margin: 20px 0;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .divider::before { margin-left: 10px; }
+        .divider::after { margin-right: 10px; }
+
+        @media (max-width: 480px) {
+            .container { padding: 35px 25px; }
+            .logo-container { width: 130px; height: 130px; }
+            .brand-name { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-section">
+            <div class="logo-container">
+                <img src="imp.jpeg" alt="Nawaia Guide" class="logo-image">
+            </div>
+            <h1 class="brand-name">NAWIA GUIDE</h1>
+            <p class="tagline">Your Smart AI Assistant</p>
+        </div>
+
+        <div class="welcome-section">
+            <h2 class="welcome-title">مرحباً بك! 👋</h2>
+            <p class="welcome-subtitle">سجّل الدخول أو أنشئ حساباً جديداً</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('login')">تسجيل الدخول</button>
+            <button class="tab-btn" onclick="switchTab('register')">حساب جديد</button>
+            <button class="tab-btn" onclick="switchTab('nameonly')">دخول سريع</button>
+        </div>
+
+        <div class="alert alert-error" id="alertError"></div>
+        <div class="alert alert-success" id="alertSuccess"></div>
+        <div class="alert alert-info" id="alertInfo"></div>
+
+        <!-- Login Panel -->
+        <div class="form-panel active" id="loginPanel">
+            <div class="form-group">
+                <label class="form-label">البريد الإلكتروني</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📧</span>
+                    <input type="email" id="loginEmail" class="form-input" placeholder="example@email.com">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">كلمة المرور</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="loginPassword" class="form-input" placeholder="أدخل كلمة المرور">
+                    <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)">👁️</button>
+                </div>
+            </div>
+            <button class="action-btn" id="loginBtn" onclick="handleLogin()">
+                دخول ←
+            </button>
+        </div>
+
+        <!-- Register Panel -->
+        <div class="form-panel" id="registerPanel">
+            <div class="form-group">
+                <label class="form-label">الاسم</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="registerName" class="form-input" placeholder="أدخل اسمك">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">البريد الإلكتروني</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">📧</span>
+                    <input type="email" id="registerEmail" class="form-input" placeholder="example@email.com">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">كلمة المرور</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input type="password" id="registerPassword" class="form-input" placeholder="٨ أحرف على الأقل">
+                    <button type="button" class="password-toggle" onclick="togglePassword('registerPassword', this)">👁️</button>
+                </div>
+            </div>
+            <button class="action-btn" id="registerBtn" onclick="handleRegister()">
+                إنشاء حساب ✨
+            </button>
+        </div>
+
+        <!-- Name Only Panel -->
+        <div class="form-panel" id="nameonlyPanel">
+            <div class="form-group">
+                <label class="form-label">الاسم المستخدم</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input type="text" id="nameOnlyInput" class="form-input" placeholder="أدخل اسمك فقط...">
+                </div>
+            </div>
+            <button class="action-btn" id="nameOnlyBtn" onclick="handleNameOnlyLogin()">
+                دخول سريع ←
+            </button>
+            <div class="divider"></div>
+            <p class="info-text">✨ الدخول بالاسم فقط | مفيش حدود | مفيش كلمة مرور</p>
+        </div>
+
+        <p class="info-text">بياناتك آمنة ومحمية بالكامل 🔒</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const SUPABASE_URL = 'https://atdwtbebiqfsefxlxoof.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_F1P7qrsQbVFQAzmp3pw7rg_vDdwphWD';
+
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+            auth: {
+                // ✅ زيادة الـ limit: تخزين الجلسة في localStorage عشان تفضل أطول
+                persistSession: true,
+                autoRefreshToken: true,
+                detectSessionInUrl: true,
+                storageKey: 'nawia-auth-token',
+            },
+            global: {
+                headers: {
+                    // ✅ تحديد الـ client عشان Supabase يعرف الـ source
+                    'x-client-info': 'nawia-guide/1.0'
+                }
+            }
+        });
+
+        // ============================================================
+        // ⚠️ غيري اسم الملف ده لاسم صفحة الشات عندك بالضبط ⚠️
+        // ============================================================
+        const CHAT_PAGE = 'index2.html';
+
+        // ======= Rate Limiting محلي - عشان تحمي من كتر المحاولات =======
+        // الـ limit: 10 محاولات كل 15 دقيقة لكل action
+        const rateLimiter = {
+            attempts: {},
+            MAX_ATTEMPTS: 10,       // ✅ رفعنا الـ limit لـ 10 محاولات
+            WINDOW_MS: 15 * 60 * 1000, // 15 دقيقة
+
+            check(action) {
+                const now = Date.now();
+                const key = action;
+                if (!this.attempts[key]) {
+                    this.attempts[key] = { count: 0, firstAttempt: now };
+                }
+                const data = this.attempts[key];
+                // reset بعد انتهاء الـ window
+                if (now - data.firstAttempt > this.WINDOW_MS) {
+                    data.count = 0;
+                    data.firstAttempt = now;
+                }
+                if (data.count >= this.MAX_ATTEMPTS) {
+                    const remainingMs = this.WINDOW_MS - (now - data.firstAttempt);
+                    const remainingMin = Math.ceil(remainingMs / 60000);
+                    return { allowed: false, remaining: remainingMin };
+                }
+                data.count++;
+                return { allowed: true, remaining: this.MAX_ATTEMPTS - data.count };
+            }
+        };
+
+        // ======= دالة إظهار/إخفاء كلمة المرور =======
+        function togglePassword(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active',
+                    (tab === 'login' && i === 0) ||
+                    (tab === 'register' && i === 1) ||
+                    (tab === 'nameonly' && i === 2)
+                );
+            });
+            document.getElementById('loginPanel').classList.toggle('active', tab === 'login');
+            document.getElementById('registerPanel').classList.toggle('active', tab === 'register');
+            document.getElementById('nameonlyPanel').classList.toggle('active', tab === 'nameonly');
+            hideAlerts();
+        }
+
+        function showError(msg) {
+            hideAlerts();
+            document.getElementById('alertError').textContent = msg;
+            document.getElementById('alertError').classList.add('show');
+        }
+
+        function showSuccess(msg) {
+            hideAlerts();
+            document.getElementById('alertSuccess').textContent = msg;
+            document.getElementById('alertSuccess').classList.add('show');
+        }
+
+        function showInfo(msg) {
+            hideAlerts();
+            document.getElementById('alertInfo').textContent = msg;
+            document.getElementById('alertInfo').classList.add('show');
+        }
+
+        function hideAlerts() {
+            document.getElementById('alertError').classList.remove('show');
+            document.getElementById('alertSuccess').classList.remove('show');
+            document.getElementById('alertInfo').classList.remove('show');
+        }
+
+        function setLoading(btnId, loading, defaultText) {
+            const btn = document.getElementById(btnId);
+            btn.disabled = loading;
+            btn.innerHTML = loading ? `جاري التحميل <span class="spinner"></span>` : defaultText;
+        }
+
+        // ======= تسجيل الدخول =======
+        async function handleLogin() {
+            // ✅ فحص الـ rate limit
+            const limit = rateLimiter.check('login');
+            if (!limit.allowed) {
+                showError(`⏳ كتر المحاولات! انتظر ${limit.remaining} دقيقة وحاول تاني`);
+                return;
+            }
+
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+
+            if (!email || !password) {
+                showError('من فضلك أدخل البريد الإلكتروني وكلمة المرور');
+                return;
+            }
+
+            setLoading('loginBtn', true, 'دخول ←');
+
+            try {
+                const { data, error } = await _supabase.auth.signInWithPassword({ email, password });
+
+                if (error) {
+                    setLoading('loginBtn', false, 'دخول ←');
+                    if (error.message.includes('Invalid login credentials'))
+                        showError('❌ البريد الإلكتروني أو كلمة المرور غلط');
+                    else if (error.message.includes('Email not confirmed'))
+                        showError('📧 من فضلك أكد بريدك الإلكتروني الأول');
+                    else if (error.message.includes('rate limit') || error.status === 429)
+                        showError('⏳ كتر المحاولات! انتظر شوية وحاول تاني');
+                    else
+                        showError('❌ ' + error.message);
+                    return;
+                }
+
+                localStorage.setItem('userName', data.user.user_metadata?.name || data.user.email);
+                localStorage.setItem('userEmail', data.user.email);
+                localStorage.setItem('userId', data.user.id);
+
+                showSuccess('✅ تم تسجيل الدخول! جاري التحويل...');
+                setTimeout(() => { window.location.href = CHAT_PAGE; }, 1200);
+
+            } catch (err) {
+                setLoading('loginBtn', false, 'دخول ←');
+                showError('❌ حدث خطأ في الاتصال');
+            }
+        }
+
+        // ======= إنشاء حساب جديد - مع دخول تلقائي ✅ =======
+        async function handleRegister() {
+            // ✅ فحص الـ rate limit
+            const limit = rateLimiter.check('register');
+            if (!limit.allowed) {
+                showError(`⏳ كتر المحاولات! انتظر ${limit.remaining} دقيقة وحاول تاني`);
+                return;
+            }
+
+            const name = document.getElementById('registerName').value.trim();
+            const email = document.getElementById('registerEmail').value.trim();
+            const password = document.getElementById('registerPassword').value;
+
+            if (!name || !email || !password) {
+                showError('من فضلك اكمل جميع الحقول');
+                return;
+            }
+
+            if (password.length < 8) {
+                showError('كلمة المرور لازم تكون ٨ أحرف على الأقل');
+                return;
+            }
+
+            setLoading('registerBtn', true, 'إنشاء حساب ✨');
+
+            try {
+                // الخطوة 1: إنشاء الحساب
+                const { data: signUpData, error: signUpError } = await _supabase.auth.signUp({
+                    email,
+                    password,
+                    options: { data: { name } }
+                });
+
+                if (signUpError) {
+                    setLoading('registerBtn', false, 'إنشاء حساب ✨');
+                    if (signUpError.message.includes('already registered') || signUpError.message.includes('User already registered'))
+                        showError('📧 البريد ده مسجل بالفعل، جرب تسجل الدخول');
+                    else if (signUpError.message.includes('rate limit') || signUpError.status === 429)
+                        showError('⏳ كتر المحاولات! انتظر شوية وحاول تاني');
+                    else
+                        showError('❌ ' + signUpError.message);
+                    return;
+                }
+
+                // الخطوة 2: ✅ تسجيل دخول تلقائي بعد التسجيل
+                const { data, error: loginError } = await _supabase.auth.signInWithPassword({
+                    email,
+                    password
+                });
+
+                if (loginError) {
+                    // لو فشل الـ login خلّيه يسجل دخول يدوي
+                    setLoading('registerBtn', false, 'إنشاء حساب ✨');
+                    showInfo('✅ الحساب اتعمل! من فضلك سجل دخول الآن');
+                    switchTab('login');
+                    document.getElementById('loginEmail').value = email;
+                    return;
+                }
+
+                // الخطوة 3: حفظ البيانات والتحويل
+                localStorage.setItem('userName', name);
+                localStorage.setItem('userEmail', email);
+                localStorage.setItem('userId', data.user.id);
+
+                showSuccess('🎉 أهلاً ' + name + '! جاري التحويل...');
+                setTimeout(() => { window.location.href = CHAT_PAGE; }, 1200);
+
+            } catch (err) {
+                setLoading('registerBtn', false, 'إنشاء حساب ✨');
+                showError('❌ حدث خطأ في الاتصال');
+            }
+        }
+
+        // ======= تسجيل الدخول بالاسم فقط =======
+        function handleNameOnlyLogin() {
+            const userName = document.getElementById('nameOnlyInput').value.trim();
+
+            if (!userName) {
+                showError('❌ من فضلك أدخل اسمك');
+                return;
+            }
+
+            if (userName.length < 2) {
+                showError('❌ الاسم يجب أن يكون حرفين على الأقل');
+                return;
+            }
+
+            localStorage.setItem('userName', userName);
+            localStorage.setItem('userEmail', userName + '@quick.nawaia');
+            localStorage.setItem('userId', 'quick_' + Date.now());
+
+            setLoading('nameOnlyBtn', true, 'دخول سريع ←');
+            showSuccess('✅ مرحباً ' + userName + '! جاري التحويل...');
+
+            setTimeout(() => { window.location.href = CHAT_PAGE; }, 1200);
+        }
+
+        // ======= فحص الجلسة - مع ✅ auto refresh =======
+        async function checkSession() {
+            const { data: { session } } = await _supabase.auth.getSession();
+            if (session) {
+                localStorage.setItem('userName', session.user.user_metadata?.name || session.user.email);
+                localStorage.setItem('userEmail', session.user.email);
+                localStorage.setItem('userId', session.user.id);
+                showInfo(`✅ أنت مسجل الدخول بالفعل كـ ${localStorage.getItem('userName')}`);
+            }
+        }
+
+        // ======= ✅ مراقبة تغيير حالة الجلسة =======
+        _supabase.auth.onAuthStateChange((event, session) => {
+            if (event === 'TOKEN_REFRESHED') {
+                // الـ token اتجدد تلقائياً - مش محتاجة تعمل حاجة
+                console.log('Token refreshed successfully');
+            }
+            if (event === 'SIGNED_OUT') {
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userId');
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Enter key للدخول السريع
+            const nameInput = document.getElementById('nameOnlyInput');
+            if (nameInput) {
+                nameInput.addEventListener('keypress', function(event) {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        handleNameOnlyLogin();
+                    }
+                });
+            }
+
+            // ✅ Enter key لتسجيل الدخول
+            document.getElementById('loginPassword').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleLogin();
+                }
+            });
+
+            // ✅ Enter key لإنشاء الحساب
+            document.getElementById('registerPassword').addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    handleRegister();
+                }
+            });
+        });
+
+        checkSession();
+    </script>
+</body>
+</html>

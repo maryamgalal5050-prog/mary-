@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawaia Guide - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #000428 0%, #001a3d 100%);
+            min-height: 100vh;
+            padding: 0;
+            color: white;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #0a0e27;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        .greeting {
+            margin-bottom: 40px;
+            padding-top: 10px;
+        }
+
+        .greeting h1 {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: white;
+        }
+
+        .greeting h1 .name {
+            color: #ffb366;
+        }
+
+        .greeting p {
+            color: #a8b2d1;
+            font-size: 30px;
+        }
+
+        .action-cards {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 50px;
+        }
+
+        .card {
+            background: linear-gradient(135deg, #ffb366 0%, #ff9d4d 100%);
+            border-radius: 25px;
+            padding: 40px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 157, 77, 0.4);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 157, 77, 0.6);
+        }
+
+        .card:active {
+            transform: translateY(-2px);
+        }
+
+        .card-icon {
+            font-size: 75px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
+        }
+
+        .card-title {
+            color: #0a0e27;
+            font-size: 24px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .card-arrow {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            font-size: 32px;
+            color: rgba(10, 14, 39, 0.6);
+            font-weight: bold;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .see-all {
+            color: #5b9cff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .see-all:hover {
+            color: #7db3ff;
+            text-decoration: underline;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 5px 0;
+        }
+
+        .topic-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .topic-item:hover {
+            transform: translateY(-8px);
+        }
+
+        /* الأيقونة الدائرية */
+        .topic-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        /* الصورة في وسط الدائرة مع مسافة حولينها */
+        .topic-icon img {
+            width: 75%;
+            height: 75%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .topic-item:hover .topic-icon {
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+            transform: scale(1.08);
+        }
+
+        /* خلفيات الأيقونات */
+        .topic-icon.about {
+            background: linear-gradient(135deg, #bfdbfe 0%, #60a5fa 100%);
+        }
+
+        .topic-icon.departments {
+            background: linear-gradient(135deg, #93c5fd 0%, #3b82f6 100%);
+        }
+
+        .topic-icon.schedule {
+            background: linear-gradient(135deg, #fdba74 0%, #f97316 100%);
+        }
+
+        .topic-icon.support {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        }
+
+        .topic-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: white;
+            text-align: center;
+        }
+
+        .history-item {
+            background: rgba(37, 99, 235, 0.1);
+            border: 2px solid #3b82f6;
+            border-radius: 18px;
+            padding: 20px 22px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .history-item:hover {
+            background: rgba(37, 99, 235, 0.2);
+            border-color: #60a5fa;
+            transform: translateX(-5px);
+        }
+
+        .history-text {
+            color: white;
+            font-size: 15px;
+            font-weight: 500;
+            flex: 1;
+            text-align: right;
+            line-height: 1.6;
+        }
+
+        .history-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #ffffff 0%, #e5e7eb 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            font-size: 21px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            flex-shrink: 0;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(8px);
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            border-radius: 28px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 25px;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(96, 165, 250, 0.3);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(96, 165, 250, 0.3);
+        }
+
+        .modal-title {
+            color: #60a5fa;
+            font-size: 22px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .university-logo-modal {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 10px;
+        }
+
+        .modal-close {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: rgba(239,68,68,0.6);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            color: #e0e7ff;
+            line-height: 1.7;
+            font-size: 14px;
+        }
+
+        .modal-body h3 {
+            color: #60a5fa;
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+        }
+
+        .modal-body h4 {
+            color: #fbbf24;
+            font-size: 16px;
+            margin: 15px 0 8px 0;
+        }
+
+        .modal-body ul {
+            padding-right: 20px;
+            margin: 10px 0;
+        }
+
+        .modal-body li {
+            margin: 8px 0;
+        }
+
+        .modal-body hr {
+            border-color: rgba(96, 165, 250, 0.2);
+            margin: 15px 0;
+        }
+
+        .department-badge {
+            background: rgba(37, 99, 235, 0.2);
+            border-right: 3px solid #60a5fa;
+            padding: 12px 15px;
+            margin: 12px 0;
+            border-radius: 12px;
+        }
+
+        .fb-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #1877f2, #0d65d6);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            margin-top: 15px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .fb-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4);
+        }
+
+        .drive-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #0f9d58, #0b7e46);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            margin: 15px 0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .drive-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(15, 157, 88, 0.4);
+        }
+
+        .logo-badge {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 15px;
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 20px;
+        }
+
+        .logo-badge img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        /* شاشات صغيرة */
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px 15px;
+            }
+
+            .greeting h1 {
+                font-size: 30px;
+            }
+
+            .card {
+                padding: 35px 25px;
+            }
+
+            .card-icon {
+                font-size: 65px;
+            }
+
+            .topics-grid {
+                gap: 15px;
+            }
+
+            .topic-icon {
+                width: 60px;
+                height: 60px;
+            }
+
+            .topic-label {
+                font-size: 12px;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="greeting">
+            <h1>Hello, <span class="name" id="userName">Guest</span></h1>
+            <p>?How can I assist you today</p>
+        </div>
+
+        <div class="action-cards">
+            <div class="card" onclick="window.location.href='chat.html'">
+                <div class="card-arrow">↗</div>
+                <div class="card-icon">💬</div>
+                <div class="card-title">Chat with Nawaaia Guide</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">Topics</h2>
+                <a href="#" class="see-all" onclick="showAllTopics(event)">See All</a>
+            </div>
+            <div class="topics-grid">
+                <!-- About -->
+                <div class="topic-item" onclick="openModal('about')">
+                    <div class="topic-icon about">
+                        <img src="about.jpeg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.8em%22 font-size=%2290%22%3Eℹ️%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="topic-label">About</div>
+                </div>
+                <!-- Departments -->
+                <div class="topic-item" onclick="openModal('departments')">
+                    <div class="topic-icon departments">
+                        <img src="departments.jpeg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.8em%22 font-size=%2290%22%3E🏛️%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="topic-label">Departments</div>
+                </div>
+                <!-- Schedule -->
+                <div class="topic-item" onclick="openModal('schedule')">
+                    <div class="topic-icon schedule">
+                        <img src="schedule.jpeg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.8em%22 font-size=%2290%22%3E📅%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="topic-label">Schedule</div>
+                </div>
+                <!-- Support -->
+                <div class="topic-item" onclick="openModal('support')">
+                    <div class="topic-icon support">
+                        <img src="support.jpeg" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ctext y=%22.8em%22 font-size=%2290%22%3E🛠️%3C/text%3E%3C/svg%3E'">
+                    </div>
+                    <div class="topic-label">Support</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">History</h2>
+                <a href="#" class="see-all" onclick="showAllHistory(event)">See All</a>
+            </div>
+            
+            <div class="history-item" onclick="openHistoryItem('اقسام كلية تربية نوعية')">
+                <div class="history-icon">👤</div>
+                <div class="history-text">ممكن اعرف اقسام كلية تربية نوعية؟</div>
+            </div>
+            
+            <div class="history-item" onclick="openHistoryItem('نظام الساعات المعتمدة')">
+                <div class="history-icon">👤</div>
+                <div class="history-text">ماهو نظام الساعات المعتمده بالكلية؟</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ABOUT -->
+    <div id="modal-about" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <img src="WhatsApp Image 2026-02-09 at 9.59.17 PM.jpeg" alt="Ain Shams Logo" class="university-logo-modal" onerror="this.style.display='none'">
+                    <span>About الكلية</span>
+                </div>
+                <button class="modal-close" onclick="closeModal('about')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="logo-badge">
+                    <img src="ainshams-logo.png" alt="Ain Shams University" onerror="this.style.display='none'">
+                    <div>
+                        <h3 style="margin:0">🏫 كلية التربية النوعية</h3>
+                        <p style="margin:0; color:#ffb366">جامعة عين شمس</p>
+                    </div>
+                </div>
+                
+                <h3>📌 نظرة عامة</h3>
+                <p>تُعد كلية التربية النوعية – جامعة عين شمس إحدى المؤسسات الأكاديمية المتخصصة التي تهدف إلى إعداد كوادر تربوية ومهنية متميزة في مجالات التعليم النوعي المختلفة. وتأتي أهمية الكلية من دورها في تلبية احتياجات المجتمع من معلمين وأخصائيين يمتلكون مهارات تربوية وتقنية وإبداعية، بما يواكب متطلبات العصر الحديث والتحول الرقمي.</p>
+                
+                <h3>📖 الوصف التفصيلي</h3>
+                <p>تقدم الكلية منظومة تعليمية متكاملة تعتمد على الدمج بين المعرفة النظرية والتطبيق العملي، حيث يتم تدريب الطلاب على استخدام أحدث الأساليب التربوية والتكنولوجية في التعليم. كما تهدف إلى تطوير قدرات الطلاب في التفكير النقدي، حل المشكلات، والعمل الجماعي.</p>
+                <p>وتضم الكلية مجموعة متنوعة من الأقسام العلمية التي تغطي مجالات متعددة، مثل:</p>
+                <ul>
+                    <li>تكنولوجيا التعليم</li>
+                    <li>التربية الفنية</li>
+                    <li>التربية الموسيقية</li>
+                    <li>الإعلام التربوي</li>
+                    <li>الاقتصاد المنزلي</li>
+                </ul>
+                <p>ويتم تدريس هذه التخصصات من خلال برامج دراسية محدثة تتوافق مع المعايير القومية والدولية للجودة التعليمية.</p>
+                
+                <h3>🎓 البرامج الأكاديمية</h3>
+                <ul>
+                    <li>برامج البكالوريوس في التخصصات النوعية المختلفة</li>
+                    <li>برامج الدراسات العليا (دبلوم – ماجستير – دكتوراه)</li>
+                    <li>برامج تدريبية وورش عمل لتنمية المهارات المهنية</li>
+                    <li>برامج تعليم إلكتروني وهجين</li>
+                </ul>
+                
+                <h3>📚 أساليب التعليم</h3>
+                <ul>
+                    <li>التعلم القائم على المشروعات (Project-Based Learning)</li>
+                    <li>التعلم التفاعلي</li>
+                    <li>التعلم الإلكتروني (E-learning)</li>
+                    <li>استخدام الوسائط المتعددة</li>
+                    <li>التعلم التعاوني</li>
+                </ul>
+                
+                <h3>🔧 الإمكانات</h3>
+                <ul>
+                    <li>معامل حاسب آلي متطورة</li>
+                    <li>قاعات دراسية ذكية</li>
+                    <li>استوديوهات إعلامية</li>
+                    <li>معامل موسيقى وفنون</li>
+                    <li>مكتبة أكاديمية متكاملة (ورقية ورقمية)</li>
+                    <li>منصات تعليم إلكتروني</li>
+                </ul>
+                
+                <h3>👥 خدمات الطلاب</h3>
+                <ul>
+                    <li>الإرشاد الأكاديمي</li>
+                    <li>الدعم الفني والتقني</li>
+                    <li>التدريب الميداني</li>
+                    <li>الأنشطة الطلابية</li>
+                    <li>خدمات المكتبة</li>
+                    <li>الدعم النفسي والتربوي</li>
+                </ul>
+                
+                <h3>🏃 التدريب الميداني</h3>
+                <p>توفر الكلية فرص تدريب عملي داخل المدارس والمؤسسات التعليمية، مما يساعد الطلاب على تطبيق ما تعلموه واكتساب خبرة حقيقية في بيئة العمل.</p>
+                
+                <h3>🔬 البحث العلمي والابتكار</h3>
+                <p>تولي الكلية اهتمامًا كبيرًا بالبحث العلمي، حيث تشجع الطلاب وأعضاء هيئة التدريس على إجراء أبحاث ودراسات تسهم في تطوير العملية التعليمية وحل المشكلات المجتمعية.</p>
+                
+                <h3>🤝 خدمة المجتمع</h3>
+                <p>تشارك الكلية في العديد من المبادرات المجتمعية، مثل:</p>
+                <ul>
+                    <li>محو الأمية</li>
+                    <li>التوعية التربوية</li>
+                    <li>التدريب المجتمعي</li>
+                    <li>دعم الفئات الخاصة</li>
+                </ul>
+                
+                <h3>👁️ الرؤية</h3>
+                <p>تحقيق الريادة والتميز في مجالات التعليم النوعي على المستوى المحلي والإقليمي.</p>
+                
+                <h3>📜 الرسالة</h3>
+                <p>إعداد كوادر تعليمية ومهنية مؤهلة علميًا وعمليًا، قادرة على الابتكار والتطوير المستمر، من خلال بيئة تعليمية حديثة تدعم البحث العلمي وخدمة المجتمع.</p>
+                
+                <h3>💎 القيم</h3>
+                <ul>
+                    <li>الجودة والتميز</li>
+                    <li>الابتكار</li>
+                    <li>التعاون</li>
+                    <li>المسؤولية المجتمعية</li>
+                    <li>التعلم المستمر</li>
+                </ul>
+                
+                <h3>🎯 الأهداف الاستراتيجية</h3>
+                <ul>
+                    <li>تحسين جودة العملية التعليمية</li>
+                    <li>تطوير البرامج الأكاديمية باستمرار</li>
+                    <li>تعزيز استخدام التكنولوجيا في التعليم</li>
+                    <li>دعم البحث العلمي</li>
+                    <li>إعداد خريجين مؤهلين لسوق العمل</li>
+                    <li>بناء شراكات محلية ودولية</li>
+                </ul>
+                
+                <h3>🎓 مواصفات الخريج</h3>
+                <ul>
+                    <li>يمتلك مهارات تربوية متقدمة</li>
+                    <li>قادر على استخدام التكنولوجيا الحديثة</li>
+                    <li>مبدع وقادر على الابتكار</li>
+                    <li>يمتلك مهارات التواصل والعمل الجماعي</li>
+                    <li>قادر على حل المشكلات واتخاذ القرار</li>
+                </ul>
+                
+                <h3>💼 فرص العمل</h3>
+                <ul>
+                    <li>معلم في المدارس الحكومية والخاصة</li>
+                    <li>أخصائي تكنولوجيا تعليم</li>
+                    <li>مصمم تعليمي (Instructional Designer)</li>
+                    <li>أخصائي إعلام تربوي</li>
+                    <li>العمل في مجالات الفنون والموسيقى</li>
+                    <li>العمل في المؤسسات التعليمية والتدريبية</li>
+                </ul>
+                
+                <a href="https://www.facebook.com/share/1HQXvuhhg7/" target="_blank" class="fb-link">
+                    📘 تابعنا على فيسبوك
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DEPARTMENTS -->
+    <div id="modal-departments" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>🏛️</span> أقسام الكلية
+                </div>
+                <button class="modal-close" onclick="closeModal('departments')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="department-badge">
+                    <strong>📱 قسم تكنولوجيا التعليم:</strong> ويشمل تخصصات (حاسب آلي، أخصائي تكنولوجيا تعليم، مناهج وطرق تدريس التكنولوجيا).
+                </div>
+                <div class="department-badge">
+                    <strong>📺 قسم الإعلام التربوي:</strong> ويتضمن (صحافة وإذاعة وتليفزيون، فنون مسرحية، مناهج وطرق تدريس الإعلام التربوي).
+                </div>
+                <div class="department-badge">
+                    <strong>🎨 قسم التربية الفنية:</strong> يركز على إعداد معلم التربية الفنية وتنمية المهارات الإبداعية.
+                </div>
+                <div class="department-badge">
+                    <strong>🎵 قسم التربية الموسيقية:</strong> يركز على تأهيل متخصصين في مجالات التربية الموسيقية والآلات.
+                </div>
+                <div class="department-badge">
+                    <strong>🏠 قسم الاقتصاد المنزلي:</strong> يركز على تأهيل متخصصين في التغذية، الملابس، والإدارة المنزلية.
+                </div>
+                <div class="department-badge">
+                    <strong>🧠 قسم العلوم التربوية والنفسية:</strong> يقدم الدعم التربوي والنفسي المتخصص.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SCHEDULE -->
+    <div id="modal-schedule" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>📆</span> Schedule & مواد الترم
+                </div>
+                <button class="modal-close" onclick="closeModal('schedule')">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>📅 <strong>مواد الترم والجداول الدراسية</strong></p>
+                <p>لتحميل ومشاهدة جداول المواد الدراسية وجداول المحاضرات، يرجى الضغط على الرابط أدناه:</p>
+                
+                <a href="https://drive.google.com/drive/mobile/folders/13qwA3epHy0lmszYk4Kza5kTVTDPZ98Eh?fbclid=IwdGRjcARYcHpjbGNrBFhwc2V4dG4DYWVtAjExAHNydGMGYXBwX2lkDDM1MDY4NTUzMTcyOAABHpMmki5a6I6XXz_o9snNVM5ofXHQcNvHbvQF3B1g7KxDttcplmPdvIUsapBV_aem_CUL_RgUGJPpqT9FnXPngaA&pli=1" target="_blank" class="drive-link">
+                    📂 اضغط هنا لفتح مجلد الجداول - Google Drive
+                </a>
+                
+                <hr>
+                <p>📚 <strong>مواد الترم تشمل:</strong></p>
+                <ul>
+                    <li>مواد التخصص المختلفة حسب القسم</li>
+                    <li>المواد التربوية والنفسية</li>
+                    <li>مواد ثقافية عامة</li>
+                    <li>المشاريع والتدريبات العملية</li>
+                </ul>
+                <p>💡 للتحديثات الأسبوعية للجداول، تابع مجلد Google Drive أعلاه.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: SUPPORT -->
+    <div id="modal-support" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <span>💼</span> الدعم (الشؤون + الاتحاد)
+                </div>
+                <button class="modal-close" onclick="closeModal('support')">✕</button>
+            </div>
+            <div class="modal-body">
+                <h3>📌 شؤون الطلاب</h3>
+                <p>مسؤولة عن كل الإجراءات الرسمية للطلبة، زي:</p>
+                <ul>
+                    <li>التقديم والتسجيل</li>
+                    <li>استخراج الكارنيه</li>
+                    <li>الجداول والنتائج</li>
+                    <li>تقديم الأعذار أو طلبات التأجيل</li>
+                    <li>أي أوراق رسمية تخص الدراسة</li>
+                </ul>
+                <p>👉 لو عندك مشكلة في ورقك أو بياناتك، دي أول جهة تروحي لها.</p>
+                
+                <hr>
+                
+                <h3>👥 اتحاد الطلاب</h3>
+                <p>ده فريق من الطلبة بيمثل باقي الطلبة وبيحاول يحسن حياتهم في الكلية، من خلال:</p>
+                <ul>
+                    <li>تنظيم الأنشطة (ثقافية – رياضية – فنية)</li>
+                    <li>نقل مشاكل واقتراحات الطلبة للإدارة</li>
+                    <li>دعم الطلبة الجداد ومساعدتهم يندمجوا</li>
+                    <li>عمل إيفنتات وورش مفيدة</li>
+                </ul>
+                
+                <a href="https://www.facebook.com/profile.php?id=61572473489579&mibextid=ZbWKwL" target="_blank" class="fb-link">
+                    📘 صفحة اتحاد الطلاب على فيسبوك
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            const userName = localStorage.getItem('userName');
+            const userNameElement = document.getElementById('userName');
+            
+            if (userName && userName.trim() !== '') {
+                userNameElement.textContent = userName;
+            } else {
+                userNameElement.textContent = 'Guest';
+            }
+        });
+
+        function openModal(modalName) {
+            const modal = document.getElementById(`modal-${modalName}`);
+            if (modal) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeModal(modalName) {
+            const modal = document.getElementById(`modal-${modalName}`);
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        }
+
+        function openTopic(topic) {
+            if (topic === 'About') openModal('about');
+            else if (topic === 'Departments') openModal('departments');
+            else if (topic === 'Schedule') openModal('schedule');
+            else if (topic === 'Support') openModal('support');
+        }
+
+        function showAllTopics(event) {
+            event.preventDefault();
+            alert('📚 جميع المواضيع: About - Departments - Schedule - Support');
+        }
+
+        function openHistoryItem(query) {
+            if (query.includes('اقسام')) {
+                openModal('departments');
+            } else {
+                alert('🔍 جاري البحث عن: ' + query + '\n(سيتم تفعيل البحث قريباً)');
+            }
+        }
+
+        function showAllHistory(event) {
+            event.preventDefault();
+            alert('📜 سجل المحادثات السابقة (قريباً)');
+        }
+    </script>
+</body>
+</html>

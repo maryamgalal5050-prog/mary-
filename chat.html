@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawaia Guide - Chat</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #000428 0%, #001a3d 100%);
+            min-height: 100vh;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .chat-container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: #0a0e27;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        .chat-header {
+            background: linear-gradient(135deg, #0d1535 0%, #0a0e27 100%);
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            border-bottom: 1px solid rgba(91,156,255,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+        .back-btn {
+            background: rgba(255,255,255,0.08);
+            border: none; border-radius: 50%; width: 40px; height: 40px;
+            color: white; cursor: pointer; font-size: 20px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; flex-shrink: 0;
+        }
+        .back-btn:hover { background: rgba(255,255,255,0.15); }
+        .bot-avatar {
+            width: 46px; height: 46px;
+            background: linear-gradient(135deg, #ffb366 0%, #ff9d4d 100%);
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-size: 24px; flex-shrink: 0;
+        }
+        .bot-info { flex: 1; }
+        .bot-name { font-size: 17px; font-weight: 700; color: white; }
+        .bot-status { font-size: 13px; color: #4ade80; display: flex; align-items: center; gap: 5px; }
+        .status-dot { width: 7px; height: 7px; background: #4ade80; border-radius: 50%; }
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-bottom: 100px;
+        }
+        .messages-area::-webkit-scrollbar { width: 4px; }
+        .messages-area::-webkit-scrollbar-thumb { background: rgba(91,156,255,0.3); border-radius: 2px; }
+        .message { display: flex; gap: 10px; max-width: 92%; animation: fadeIn 0.3s ease; }
+        .message.user { flex-direction: row-reverse; margin-right: auto; margin-left: 0; align-self: flex-end; }
+        .message.bot { align-self: flex-start; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .msg-avatar {
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; flex-shrink: 0; align-self: flex-end;
+        }
+        .bot .msg-avatar { background: linear-gradient(135deg, #ffb366 0%, #ff9d4d 100%); }
+        .user .msg-avatar { background: linear-gradient(135deg, #5b9cff 0%, #3b82f6 100%); }
+        .msg-bubble {
+            padding: 13px 16px;
+            border-radius: 18px;
+            line-height: 1.7;
+            font-size: 14.5px;
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        .bot .msg-bubble {
+            background: rgba(37, 99, 235, 0.15);
+            border: 1.5px solid rgba(91,156,255,0.25);
+            border-bottom-right-radius: 4px;
+            color: #e8eaf6;
+        }
+        .user .msg-bubble {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            border-bottom-left-radius: 4px;
+            color: white;
+            text-align: right;
+        }
+        .msg-bubble strong { color: #ffb366; font-weight: 700; }
+        .typing-indicator { display: flex; gap: 5px; padding: 14px 18px; align-items: center; }
+        .typing-dot {
+            width: 8px; height: 8px; background: #5b9cff;
+            border-radius: 50%; animation: bounce 1.2s infinite;
+        }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+        }
+        .suggestions {
+            padding: 10px 16px 5px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+        }
+        .suggestions::-webkit-scrollbar { height: 3px; }
+        .suggestion-chip {
+            background: rgba(91,156,255,0.1);
+            border: 1px solid rgba(91,156,255,0.3);
+            border-radius: 20px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-family: 'Cairo', sans-serif;
+            color: #93c5fd;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .suggestion-chip:hover {
+            background: rgba(91,156,255,0.25);
+            border-color: #5b9cff;
+            color: white;
+        }
+        .input-area {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 420px;
+            background: #0d1535;
+            border-top: 1px solid rgba(91,156,255,0.2);
+            padding: 12px 16px;
+        }
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .msg-input {
+            flex: 1;
+            background: rgba(255,255,255,0.07);
+            border: 1.5px solid rgba(91,156,255,0.25);
+            border-radius: 24px;
+            padding: 12px 18px;
+            font-size: 14.5px;
+            font-family: 'Cairo', sans-serif;
+            color: white;
+            outline: none;
+            transition: border-color 0.2s;
+            resize: none;
+            max-height: 100px;
+            direction: rtl;
+        }
+        .msg-input::placeholder { color: rgba(255,255,255,0.35); }
+        .msg-input:focus { border-color: #5b9cff; background: rgba(255,255,255,0.1); }
+        .send-btn {
+            width: 46px; height: 46px;
+            background: linear-gradient(135deg, #ffb366 0%, #ff9d4d 100%);
+            border: none; border-radius: 50%; cursor: pointer;
+            font-size: 20px; display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s; flex-shrink: 0;
+        }
+        .send-btn:hover { transform: scale(1.08); box-shadow: 0 5px 15px rgba(255,157,77,0.4); }
+        .send-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+        .dept-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .dept-btn {
+            background: rgba(91,156,255,0.15);
+            border: 1px solid rgba(91,156,255,0.4);
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-family: 'Cairo', sans-serif;
+            color: #ffb366;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .dept-btn:hover {
+            background: rgba(91,156,255,0.3);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <button class="back-btn" onclick="window.location.href='index.html'">←</button>
+            <div class="bot-avatar">🎓</div>
+            <div class="bot-info">
+                <div class="bot-name">مساعد تربية نوعيه</div>
+                <div class="bot-status">
+                    <div class="status-dot"></div>
+                    متاح الآن
+                </div>
+            </div>
+        </div>
+        <div class="messages-area" id="messagesArea"></div>
+        <div class="suggestions" id="suggestionsBar">
+            <div class="suggestion-chip" onclick="sendSuggestion('الاقسام')">🏛️ الأقسام</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('نظام الساعات المعتمدة')">📋 الساعات المعتمدة</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('شروط التخرج')">🎓 التخرج</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('نظام التقديرات')">📊 التقديرات</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('ازاي اطلع كارنيه')">🪪 الكارنيه</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('قواعد الغياب')">⚠️ الغياب</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('مواد قسم')">📚 مواد قسم</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('مشاكل المنصة')">💻 مشاكل المنصة</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('المسرح والانشطه')">🎭 المسرح</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('معلومات عن ازاى ينضم للاتحاد')">🤝 الاتحاد</div>
+            <div class="suggestion-chip" onclick="sendSuggestion('التحويل ونقل القيد')">🔄 التحويل</div>
+        </div>
+        <div class="input-area">
+            <div class="input-row">
+                <textarea class="msg-input" id="msgInput" placeholder="اكتب سؤالك هنا..." rows="1"
+                    onkeydown="handleKeyDown(event)" oninput="autoResize(this)"></textarea>
+                <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ===================================================
+    // KNOWLEDGE BASE - محدث بالكامل
+    // ===================================================
+    const KNOWLEDGE_BASE = [
+        // 1. الطالب الجديد - معلومات شاملة عن الكلية
+        {
+            id: "new_student",
+            keywords: ["جديد", "جديدة", "لسه جديد", "أول سنة", "مقبولة جديدة", "لسه متقبلة", "انا جديدة", "لسه داخلة", "first year"],
+            variations: ["انا جديدة", "لسه جديد", "اول مرة ليا", "عايزة اعرف كل حاجة", "معلومات عن الكلية", "تعريف بالكلية"],
+            answer: `🎉 **أهلاً بيكي في كلية التربية النوعية – جامعة عين شمس** 🎉
+
+**📌 تعريف بالكلية:**
+كلية متخصصة في إعداد معلمين ومتخصصين في مجالات التربية الفنية والموسيقية والإعلامية والتكنولوجية.
+
+**📍 الموقع:** العباسية، القاهرة
+
+**🎓 الدرجة العلمية:** بكالوريوس تربية نوعية
+
+**📚 مدة الدراسة:** 4 سنوات
+
+**📋 نظام الدراسة:** ساعات معتمدة (Credit Hours)
+- الحد الأدنى: 9 ساعات في الترم
+- الحد الأقصى: 18 ساعة في الترم
+
+**🏛️ الأقسام المتاحة (6 أقسام):**
+1. 💻 تكنولوجيا التعليم
+2. 📺 الإعلام التربوي
+3. 🎨 التربية الفنية
+4. 🎵 التربية الموسيقية
+5. 🏠 الاقتصاد المنزلي
+6. 📚 العلوم التربوية والنفسية
+
+**📝 شروط القبول:**
+- الثانوية العامة أو ما يعادلها
+- اجتياز اختبارات القدرات النوعية
+- اجتياز اختبارات الصلاحية للمهنة
+
+**✨ مميزات الكلية:**
+✅ الاعتماد البرامجي لجميع البرامج
+✅ تدريب ميداني في مدارس حقيقية
+✅ مسرح طلعت حرب التاريخي
+✅ التركيز على الابتكار وسوق العمل
+
+**🪪 أوراق مطلوبة للقيد:**
+- أصل شهادة الثانوية + 3 صور
+- أصل شهادة الميلاد + 3 صور
+- 6-8 صور شخصية
+- بطاقة الترشيح
+- نموذج 2 جند (للذكور)
+
+لو عندك أي سؤال تاني، اسألي وأنا هنا عشان أساعدك! 💪`
+        },
+
+        // 2. مواد قسم التربية الفنية
+        {
+            id: "subjects_art",
+            keywords: ["مواد تربية فنية", "مواد قسم فنية", "التربية الفنية بتدرس ايه", "قسم فنية بيدرس ايه", "مواد الفنية"],
+            variations: ["مواد قسم التربية الفنية", "قسم التربية الفنية بيدرس ايه", "عايزة مواد التربية الفنية"],
+            answer: `🎨 **مواد قسم التربية الفنية – كلية التربية النوعية**
+
+**📚 السنة الأولى:**
+- أسس التربية الفنية
+- رسم (1)
+- تذوق الفنون
+- مدخل إلى التربية
+- علم نفس
+- لغة إنجليزية
+
+**📚 السنة الثانية:**
+- رسم (2)
+- خزف (1)
+- تصميم (1)
+- تكنولوجيا التعليم
+- علم اجتماع
+- حاسب آلي
+
+**📚 السنة الثالثة:**
+- نحت
+- أشغال معادن
+- تصميم (2)
+- مناهج وطرق تدريس
+- إحصاء تربوي
+
+**📚 السنة الرابعة:**
+- تاريخ الفن
+- تدريب ميداني (تربية عملية)
+- مشروع التخرج
+- إدارة مدرسية
+
+**🎯 مجالات العمل بعد التخرج:**
+- معلم تربية فنية في المدارس
+- فنان تشكيلي
+- مصمم جرافيك
+- العمل في مراكز الفنون
+
+**💡 ملاحظة:** القسم بيطلب اجتياز اختبارات قدرات فنية قبل الالتحاق`
+        },
+
+        // 3. مواد قسم التربية الموسيقية
+        {
+            id: "subjects_music",
+            keywords: ["مواد تربية موسيقية", "مواد قسم موسيقية", "التربية الموسيقية بتدرس ايه", "قسم موسيقية بيدرس ايه"],
+            variations: ["مواد قسم التربية الموسيقية", "قسم التربية الموسيقية بيدرس ايه", "عايزة مواد الموسيقية"],
+            answer: `🎵 **مواد قسم التربية الموسيقية – كلية التربية النوعية**
+
+**📚 السنة الأولى:**
+- صولفيج وإملاء لحني
+- آلة موسيقية (بيانو / شرقي)
+- عزف فردي
+- مدخل إلى التربية
+- علم نفس
+- لغة إنجليزية
+
+**📚 السنة الثانية:**
+- هارموني (1)
+- عزف موسيقي (جماعي)
+- غناء فردي وجماعي
+- تكنولوجيا التعليم
+- علم اجتماع
+
+**📚 السنة الثالثة:**
+- هارموني (2)
+- توزيع موسيقي
+- مناهج تدريس الموسيقى
+- تاريخ الموسيقى
+
+**📚 السنة الرابعة:**
+- تدريب ميداني (تربية عملية)
+- حفلات وتربية موسيقية
+- مشروع التخرج
+- إدارة فرق موسيقية
+
+**🎯 مجالات العمل بعد التخرج:**
+- معلم تربية موسيقية
+- عازف في فرق موسيقية
+- ملحن أو موزع موسيقي
+- قائد فرقة موسيقية
+
+**💡 ملاحظة:** القسم بيطلب اجتياز اختبارات قدرات موسيقية قبل الالتحاق`
+        },
+
+        // 4. مواد قسم الإعلام التربوي
+        {
+            id: "subjects_media",
+            keywords: ["مواد إعلام تربوي", "مواد قسم إعلام", "الإعلام التربوي بتدرس ايه", "قسم إعلام بيدرس ايه"],
+            variations: ["مواد قسم الإعلام التربوي", "قسم الإعلام التربوي بيدرس ايه", "عايزة مواد الإعلام"],
+            answer: `🎤 **مواد قسم الإعلام التربوي – كلية التربية النوعية**
+
+**📚 السنة الأولى:**
+- مدخل إلى الإعلام
+- اتصال وتواصل
+- لغة عربية إعلامية
+- مدخل إلى التربية
+- علم نفس
+- لغة إنجليزية
+
+**📚 السنة الثانية:**
+- صحافة مدرسية
+- إذاعة مدرسية
+- تصوير ومونتاج
+- تكنولوجيا التعليم
+- علم اجتماع
+
+**📚 السنة الثالثة:**
+- إنتاج تليفزيوني
+- علاقات عامة
+- كتابة إعلامية
+- مناهج وطرق تدريس
+
+**📚 السنة الرابعة:**
+- تدريب ميداني
+- مشروع إعلامي متكامل
+- نقد إعلامي
+- مسرح (تخصص في الفرقة الثالثة)
+
+**🎯 مجالات العمل بعد التخرج:**
+- معلم إعلام تربوي
+- مذيع في الإذاعة أو التليفزيون
+- صحفي
+- أخصائي علاقات عامة
+- منتج برامج
+
+**🎭 مميز خاص:** القسم بيتخصص في المسرح في الفرقة الثالثة`
+        },
+
+        // 5. مواد قسم تكنولوجيا التعليم
+        {
+            id: "subjects_tech",
+            keywords: ["مواد تكنولوجيا تعليم", "مواد قسم تكنولوجيا", "تكنولوجيا التعليم بتدرس ايه", "قسم تكنولوجيا بيدرس ايه"],
+            variations: ["مواد قسم تكنولوجيا التعليم", "قسم تكنولوجيا التعليم بيدرس ايه", "عايزة مواد تكنولوجيا"],
+            answer: `💻 **مواد قسم تكنولوجيا التعليم – كلية التربية النوعية**
+
+**📚 السنة الأولى:**
+- مدخل إلى تكنولوجيا التعليم
+- مهارات الحاسب
+- تصميم تعليمي (1)
+- مدخل إلى التربية
+- علم نفس
+- لغة إنجليزية
+
+**📚 السنة الثانية:**
+- وسائل تعليمية
+- برمجيات تعليمية
+- تصميم تعليمي (2)
+- تكنولوجيا التعليم المتقدمة
+- إحصاء تربوي
+
+**📚 السنة الثالثة:**
+- إنتاج فيديو تعليمي
+- الواقع الافتراضي في التعليم
+- إدارة نظم التعليم
+- مناهج وطرق تدريس
+
+**📚 السنة الرابعة:**
+- تدريب ميداني
+- مشروع نظام تعليمي
+- تقويم تكنولوجيا التعليم
+- إدارة مشاريع تعليمية
+
+**🎯 مجالات العمل بعد التخرج:**
+- معلم تكنولوجيا تعليم
+- مصمم محتوى تعليمي إلكتروني (e-learning)
+- مطور برمجيات تعليمية
+- أخصائي تكنولوجيا تعليم في المدارس والجامعات`
+        },
+
+        // 6. مواد قسم الاقتصاد المنزلي
+        {
+            id: "subjects_home",
+            keywords: ["مواد اقتصاد منزلي", "مواد قسم اقتصاد", "الاقتصاد المنزلي بتدرس ايه", "قسم اقتصاد منزلي بيدرس ايه"],
+            variations: ["مواد قسم الاقتصاد المنزلي", "قسم الاقتصاد المنزلي بيدرس ايه", "عايزة مواد الاقتصاد المنزلي"],
+            answer: `🏠 **مواد قسم الاقتصاد المنزلي – كلية التربية النوعية**
+
+**📚 السنة الأولى:**
+- مدخل إلى الاقتصاد المنزلي
+- أسس التغذية
+- مبادئ علم الغذاء
+- مدخل إلى التربية
+- علم نفس
+- لغة إنجليزية
+
+**📚 السنة الثانية:**
+- تخطيط الوجبات والتغذية
+- إدارة المنزل والمؤسسات
+- علم الملابس والنسيج
+- تكنولوجيا التعليم
+- علم اجتماع
+
+**📚 السنة الثالثة:**
+- تكنولوجيا الأغذية وحفظها
+- تربية الطفل والأسرة
+- تصميم وإعداد الملابس
+- مناهج وطرق تدريس
+
+**📚 السنة الرابعة:**
+- تدريب ميداني (تربية عملية)
+- إدارة الأسرة والطفولة
+- مشروع التخرج
+- الاقتصاد المنزلي المتقدم
+
+**🎯 مجالات العمل بعد التخرج:**
+- معلم اقتصاد منزلي
+- أخصائي تغذية
+- تصميم أزياء
+- إدارة مشاريع صغيرة
+- استشارات أسرية`
+        },
+
+        // 7. مواد قسم العلوم التربوية
+        {
+            id: "subjects_edu",
+            keywords: ["مواد علوم تربوية", "مواد قسم علوم", "العلوم التربوية بتدرس ايه", "قسم علوم تربوية بيدرس ايه"],
+            variations: ["مواد قسم العلوم التربوية", "قسم العلوم التربوية بيدرس ايه", "عايزة مواد العلوم التربوية"],
+            answer: `📖 **مواد قسم العلوم التربوية والنفسية – كلية التربية النوعية**
+
+**📚 السنة الأولى:**
+- مدخل إلى العلوم التربوية
+- علم نفس النمو
+- علم اجتماع التربية
+- مدخل إلى التربية
+- لغة إنجليزية
+- حاسب آلي
+
+**📚 السنة الثانية:**
+- أصول التربية
+- إدارة الصف
+- توجيه وإرشاد نفسي
+- تكنولوجيا التعليم
+- إحصاء تربوي
+
+**📚 السنة الثالثة:**
+- مناهج وطرق تدريس
+- تقويم تربوي
+- قياس نفسي
+- الصحة النفسية
+
+**📚 السنة الرابعة:**
+- تدريب ميداني
+- بحث تربوي
+- إدارة مدرسية
+- مشروع التخرج
+
+**🎯 مجالات العمل بعد التخرج:**
+- معلم في مختلف المراحل
+- إداري تربوي في المدارس
+- مرشد نفسي وتربوي
+- باحث في مجال التربية
+- العمل في وزارة التربية والتعليم`
+        },
+
+        // 8. طلب مواد قسم بدون تحديد - يسأل
+        {
+            id: "subjects_ask",
+            keywords: ["مواد قسم", "مواد القسم", "المواد بتاعة القسم", "القسم بيدرس ايه", "عايزة اعرف مواد القسم", "المواد الدراسية للقسم"],
+            variations: ["مواد القسم ايه", "عايزة مواد قسمي", "القسم بيدرس مواد ايه"],
+            answer: `📚 **اختر القسم اللي عايز تعرف مواده:**
+
+🎨 **التربية الفنية**
+🎵 **التربية الموسيقية**
+🎤 **الإعلام التربوي**
+💻 **تكنولوجيا التعليم**
+🏠 **الاقتصاد المنزلي**
+📖 **العلوم التربوية والنفسية**
+
+**اكتب اسم القسم بالضبط** وهبعتلك كل المواد بالتفصيل! 📝
+
+مثلاً: "مواد قسم تربية فنية" أو "مواد إعلام تربوي"`,
+            hasButtons: true
+        },
+
+        // 9. الأقسام
+        {
+            id: "departments",
+            keywords: ["قسم","أقسام","اقسام","تخصص","تخصصات"],
+            variations: ["الاقسام","اقسام الكلية","ايه الاقسام","عايزة اعرف الاقسام"],
+            answer: `🏛️ **أقسام كلية التربية النوعية جامعة عين شمس (6 أقسام):**
+
+1. 🎨 **التربية الفنية** - إعداد معلم التربية الفنية
+2. 🎵 **التربية الموسيقية** - تأهيل متخصصين في الموسيقى
+3. 🎤 **الإعلام التربوي** - صحافة، إذاعة، تليفزيون، مسرح
+4. 💻 **تكنولوجيا التعليم** - حاسب آلي، تصميم تعليمي
+5. 🏠 **الاقتصاد المنزلي** - تغذية، ملابس، إدارة منزلية
+6. 📖 **العلوم التربوية والنفسية** - دعم تربوي ونفسي
+
+📌 **التخصص بيتحدد** حسب التنسيق الداخلي للكلية ورغبة الطالب ومجموعه في اختبارات القدرات.
+
+عايزة تعرف مواد أي قسم؟ اكتبلي "مواد قسم" واسم القسم 🎯`
+        },
+
+        // 10. مشاكل المنصة
+        {
+            id: "platform_issues",
+            keywords: ["منصة","مشاكل المنصه","it","باسورد","كلمة مرور","لوجن","دخول","نسيت"],
+            variations: ["مشاكل المنصه بتاعه it","بروح الشؤون","الباسورد الغلط","مشكلة في المنصة"],
+            answer: `💻 **حل مشاكل المنصة الإلكترونية**
+
+بروح الشؤون يقول اسمه بالكامل ويقول الباسورد الغلط وهما يغيره وياخد الجديد ويقفل القديم`
+        },
+
+        // 11. اتحاد الطلاب
+        {
+            id: "union",
+            keywords: ["اتحاد","اتحاد طلاب","انضمام","عضوية","انتخابات"],
+            variations: ["معلومات عن ازاى ينضم للاتحاد","الاتحاد كان مقفول","ازاي اشترك في الاتحاد"],
+            answer: `🤝 **الاتحاد - الانضمام لاتحاد طلاب كلية التربية النوعية**
+
+للانضمام إلى اتحاد طلاب كلية التربية النوعية، يجب أن تكون طالباً مقيداً بالكلية، وحسن السير والسلوك، ومسدداً للرسوم الدراسية. يتم التقديم عبر الترشح في الانتخابات الطلابية السنوية.
+
+**خطوات الانضمام:**
+- القيد: طالب مصري الجنسية، مقيد بالكلية بصفة أساسية
+- السمعة: مستوفي شروط حسن السير والسلوك
+- التقديم: في بداية العام الدراسي في رعاية الشباب بالكلية
+- قد يتطلب تزكية من طلاب آخرين
+
+**مميزات الانضمام:**
+- المشاركة في تنظيم أنشطة الكلية
+- تنمية المهارات القيادية والفنية والرياضية
+- المساهمة في استقبال الطلاب الجدد`
+        },
+
+        // 12. المسرح والأنشطة
+        {
+            id: "theater",
+            keywords: ["مسرح","انشطه","فنون","تمثيل","طلعت حرب"],
+            variations: ["المسرح والانشطه تربية نوعيه","المسرح والانشطه"],
+            answer: `🎭 **المسرح والأنشطة في كلية التربية النوعية**
+
+**مسرح طلعت حرب:** المسرح الرئيسي للكلية، تم تجديده بأحدث التقنيات، له تاريخ عريق حيث أقيمت عليه حفلات لأم كلثوم وعبد الوهاب.
+
+**إنجازات:** المركز الأول في مسابقة التمثيل المسرحي لجامعة عين شمس 2022/2023 (مسرحية الدخان)
+
+**قسم الإعلام التربوي:** يتم دراسة المسرح والإذاعة والتليفزيون، ويتخصص الطلاب في الفرقة الثالثة في المسرح.
+
+**أنشطة:** إنتاج مسرحيات، مهرجانات، احتفالات وطنية، اكتشاف مواهب`
+        },
+
+        // 13. الكارنيه
+        {
+            id: "id_card",
+            keywords: ["كارنيه","بطاقة","قيد","أوراق"],
+            variations: ["ازاي اطلع كارنيه","الكارنيه","استخراج الكارنيه"],
+            answer: `🪪 **استخراج الكارنيه الجامعي**
+
+**الأوراق المطلوبة:**
+- أصل شهادة الثانوية العامة + 3 صور
+- أصل شهادة الميلاد (كمبيوتر) حديثة + 3 صور
+- 6-8 صور شخصية (خلفية بيضاء 4×6)
+- بطاقة الترشيح مختومة من مكتب التنسيق
+- نموذج 2 جند (للذكور)
+- صورة بطاقة الرقم القومي (الطالب + ولي الأمر)
+
+**الخطوات:**
+1. تقديم إلكتروني على منصة الجامعة الذكية
+2. سداد المصروفات (فيزا/فوري)
+3. التوجه لشؤون الطلاب بالعباسية
+
+📍 مقر الكلية: العباسية، القاهرة`
+        },
+
+        // 14. معلومات عن الشؤون والكلية
+        {
+            id: "about",
+            keywords: ["شؤون","الشؤون","عن الكلية"],
+            variations: ["معلومات عن الشؤون","معلومات عن الكلية"],
+            answer: `🏛️ **معلومات عن الكلية والشؤون**
+
+**القطاع:** الجداول الدراسية، امتحانات البكالوريوس، التدريب الميداني.
+
+**الأقسام العلمية:** تربية فنية، تربية موسيقية، اقتصاد منزلي، إعلام تربوي، تكنولوجيا تعليم، علوم تربوية.
+
+**شروط القبول:** الثانوية العامة + اختبارات قدرات + اختبارات صلاحية للمهنة.
+
+**نظام الدراسة:** 4 سنوات - ساعات معتمدة.
+
+**المميزات:** اعتماد برامجي، تدريب ميداني، التركيز على سوق العمل.
+
+**الموقع:** العباسية، القاهرة`
+        },
+
+        // 15. نظام الساعات المعتمدة
+        {
+            id: "credit_hours",
+            keywords: ["ساعات معتمدة","نظام الساعات","تسجيل مواد"],
+            variations: ["نظام الساعات المعتمدة","الساعات المعتمدة"],
+            answer: `📋 **نظام الساعات المعتمدة**
+
+- **تسجيل المقررات:** الحد الأدنى 9 ساعات، الأقصى 18 ساعة في الترم العادي
+- **الفصل الصيفي:** حد أقصى 6 ساعات (مقررين)
+- **الرسوم الدراسية:** سعر الساعة × عدد الساعات المسجلة
+- **الإرشاد الأكاديمي:** لمساعدة الطالب في تسجيل المواد المناسبة
+- **اللائحة:** لائحة 2024`
+        },
+
+        // 16. نظام التقديرات
+        {
+            id: "grades",
+            keywords: ["تقديرات","درجات","gpa","معدل"],
+            variations: ["نظام التقديرات","التقديرات"],
+            answer: `📊 **نظام التقديرات**
+
+- ممتاز (A): 90% فأكثر (4.0)
+- ممتاز (A-): 85% - 90%
+- جيد جداً (B+): 80% - 85%
+- جيد جداً (B): 75% - 80%
+- جيد (B-): 70% - 75%
+- مقبول (D): الحد الأدنى للنجاح
+- راسب (F): أقل من 50% أو 60%
+
+**حساب GPA:** (نقاط التقدير × ساعات المادة) ÷ إجمالي الساعات`
+        },
+
+        // 17. قواعد الغياب
+        {
+            id: "absence",
+            keywords: ["غياب","حضور","حرمان","انذار"],
+            variations: ["قواعد الغياب","الغياب والحرمان"],
+            answer: `⚠️ **قواعد الغياب والحرمان**
+
+- **نسبة الحضور المطلوبة:** 75% على الأقل
+- **غياب 15%:** إنذار أول
+- **غياب 25%:** إنذار ثاني وحرمان من الامتحان (FW)
+
+**النجاح والرسوب:**
+- النجاح: تقدير D أو أعلى
+- الرسوب: تقدير F (إعادة المادة كاملة)
+- أقصى درجة عند إعادة المادة: B+
+
+**الرأفة:**
+- 1% إلى 3% لرفع الطالب من راسب لناجح
+- بشرط 30% على الأقل في الامتحان التحريري`
+        },
+
+        // 18. الامتحانات
+        {
+            id: "exams",
+            keywords: ["امتحانات","امتحان","جدول","لجان"],
+            variations: ["سياسة الامتحانات","نظام الامتحانات"],
+            answer: `📝 **نظام الامتحانات**
+
+- **الامتحانات:** إلكترونية أو ورقية حسب الكلية
+- **ضوابط اللجنة:** الحضور قبل نصف ساعة، ممنوع الدخول بعد البدء
+- **أنواع التقييم:** أعمال سنة + Midterm + امتحان نهائي
+- **امتحانات عملية:** للفنية، الموسيقية، الاقتصاد المنزلي، تكنولوجيا التعليم
+- **إعلان الجداول:** عبر منصة ASU2learn`
+        },
+
+        // 19. التحويل ونقل القيد
+        {
+            id: "transfer",
+            keywords: ["تحويل","نقل قيد","نقل","انتقال"],
+            variations: ["التحويل ونقل القيد","شروط التحويل"],
+            answer: `🔄 **شروط التحويل ونقل القيد**
+
+- **الحد الأدنى:** نفس مجموع قبول الكلية في سنة الثانوية
+- **التوزيع الجغرافي:** الالتزام بمحل الإقامة
+- **اختبارات القدرات:** للفنية والموسيقية
+- **التحويل من كليات مناظرة:** النجاح في كل المقررات، نسبة المحولين لا تتجاوز 20%
+- **التحويل الإلكتروني:** عبر ums.asu.edu.eg`
+        },
+
+        // 20. شروط التخرج
+        {
+            id: "graduation",
+            keywords: ["تخرج","بكالوريوس","شروط التخرج"],
+            variations: ["شروط التخرج","التخرج"],
+            answer: `🎓 **شروط التخرج (بكالوريوس تربية نوعية)**
+
+1. **الساعات المعتمدة:** النجاح في الساعات المقررة حسب البرنامج
+2. **المعدل التراكمي (GPA):** لا يقل عن 2.0 (مقبول)
+3. **التدريب الميداني:** النجاح في التربية العملية (السنة الرابعة)
+4. **سداد الرسوم:** إبراء الذمة المالية
+
+**البرامج:** تكنولوجيا تعليم - تربية فنية - تربية موسيقية - إعلام تربوي - اقتصاد منزلي - علوم تربوية`
+        },
+
+        // 21. مكان شؤون الطلاب
+        {
+            id: "affairs_location",
+            keywords: ["مكان الشؤون", "الشؤون فين", "مبنى الشؤون", "شؤون الطلاب مكانها", "فين شؤون الطلاب", "مكان شؤون الطلاب"],
+            variations: ["عايزة اعرف مكان الشؤون", "شؤون الكلية فين", "الدرة"],
+            answer: `📍 **مكان شؤون الطلاب**
+
+شؤون الطلاب موجودة في **مبنى الاقتصاد المنزلي - الدور الأرضي** من ناحية الجاردن (الحديقة).`
+        },
+
+        // 22. مكان اتحاد الطلاب
+        {
+            id: "union_location",
+            keywords: ["مكان الاتحاد", "الاتحاد فين", "اتحاد الطلاب مكانه", "فين اتحاد الطلاب", "مكان اتحاد الطلاب"],
+            variations: ["عايزة اعرف مكان الاتحاد", "الاتحاد بيبقى فين", "فين الاتحاد"],
+            answer: `🤝 **مكان اتحاد الطلاب**
+
+اتحاد الطلاب موجود في **شارع جانبي عند الباركينج (موقف السيارات)** عند مدخل الكلية.`
+        }
+    ];
+
+    // ===================================================
+    // MATCHING ENGINE
+    // ===================================================
+    function normalizeText(text) {
+        return text.toLowerCase()
+            .replace(/[أإآا]/g, 'ا')
+            .replace(/[ةه]/g, 'ه')
+            .replace(/[يى]/g, 'ي')
+            .replace(/[ؤو]/g, 'و')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    function findBestMatch(userInput) {
+        const input = normalizeText(userInput);
+        let bestMatch = null;
+        let bestScore = 0;
+
+        for (const entry of KNOWLEDGE_BASE) {
+            let score = 0;
+            // Check variations
+            if (entry.variations) {
+                for (const variation of entry.variations) {
+                    const normalizedVar = normalizeText(variation);
+                    if (input.includes(normalizedVar) || normalizedVar.includes(input)) {
+                        score += 15;
+                    }
+                }
+            }
+            // Check keywords
+            for (const keyword of entry.keywords) {
+                const normalizedKw = normalizeText(keyword);
+                if (input.includes(normalizedKw)) {
+                    score += 5;
+                }
+            }
+            if (score > bestScore) {
+                bestScore = score;
+                bestMatch = entry;
+            }
+        }
+        return bestScore >= 2 ? bestMatch : null;
+    }
+
+    // ===================================================
+    // CHAT LOGIC
+    // ===================================================
+    const messagesArea = document.getElementById('messagesArea');
+    let isTyping = false;
+
+    function renderMarkdown(text) {
+        let html = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        
+        // Add department buttons if needed
+        if (text.includes('اختر القسم اللي عايز تعرف مواده')) {
+            html += `<div class="dept-buttons">
+                        <div class="dept-btn" onclick="sendSuggestion('مواد قسم تربية فنية')">🎨 تربية فنية</div>
+                        <div class="dept-btn" onclick="sendSuggestion('مواد قسم تربية موسيقية')">🎵 تربية موسيقية</div>
+                        <div class="dept-btn" onclick="sendSuggestion('مواد قسم إعلام تربوي')">🎤 إعلام تربوي</div>
+                        <div class="dept-btn" onclick="sendSuggestion('مواد قسم تكنولوجيا تعليم')">💻 تكنولوجيا تعليم</div>
+                        <div class="dept-btn" onclick="sendSuggestion('مواد قسم اقتصاد منزلي')">🏠 اقتصاد منزلي</div>
+                        <div class="dept-btn" onclick="sendSuggestion('مواد قسم علوم تربوية')">📖 علوم تربوية</div>
+                    </div>`;
+        }
+        return html;
+    }
+
+    function addMessage(text, isUser) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+        const avatar = document.createElement('div');
+        avatar.className = 'msg-avatar';
+        avatar.textContent = isUser ? '👤' : '🎓';
+        const bubble = document.createElement('div');
+        bubble.className = 'msg-bubble';
+        if (isUser) bubble.textContent = text;
+        else bubble.innerHTML = renderMarkdown(text);
+        msgDiv.appendChild(avatar);
+        msgDiv.appendChild(bubble);
+        messagesArea.appendChild(msgDiv);
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    }
+
+    function showTyping() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message bot';
+        typingDiv.id = 'typingIndicator';
+        typingDiv.innerHTML = `<div class="msg-avatar">🎓</div><div class="msg-bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+        messagesArea.appendChild(typingDiv);
+        messagesArea.scrollTop = messagesArea.scrollHeight;
+    }
+
+    function hideTyping() {
+        const indicator = document.getElementById('typingIndicator');
+        if (indicator) indicator.remove();
+    }
+
+    function sendMessage() {
+        const input = document.getElementById('msgInput');
+        const text = input.value.trim();
+        if (!text || isTyping) return;
+        addMessage(text, true);
+        input.value = '';
+        input.style.height = 'auto';
+        document.getElementById('sendBtn').disabled = true;
+        isTyping = true;
+        showTyping();
+        setTimeout(() => {
+            hideTyping();
+            const match = findBestMatch(text);
+            if (match) {
+                addMessage(match.answer, false);
+            } else {
+                addMessage(`😊 آسف، مش لاقي إجابة دقيقة حالياً.
+
+ممكن تسأل عن:
+🏛️ الأقسام
+📚 مواد أي قسم (اكتب "مواد قسم" واسم القسم)
+📋 نظام الساعات المعتمدة
+🎓 شروط التخرج
+🪪 الكارنيه
+⚠️ قواعد الغياب
+💻 مشاكل المنصة
+🤝 اتحاد الطلاب
+
+أو قولي "أنا جديدة" عشان أقولك كل حاجة عن الكلية!`, false);
+            }
+            document.getElementById('sendBtn').disabled = false;
+            isTyping = false;
+        }, 600);
+    }
+
+    function sendSuggestion(text) {
+        document.getElementById('msgInput').value = text;
+        sendMessage();
+    }
+
+    function handleKeyDown(e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    }
+
+    function autoResize(el) {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+    }
+
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            addMessage(`مرحباً! 👋 أنا **مساعد تربيه نوعيه ** للكلية.
+
+✨ **لو انت جديد** قول "أنا جديد" وهقولك كل حاجة عن الكلية!
+
+هساعدك في أي سؤال عن:
+🏛️ الأقسام | 📚 مواد أي قسم | 📋 الساعات المعتمدة
+🎓 التخرج | 🪪 الكارنيه | ⚠️ الغياب
+💻 مشاكل المنصة | 🤝 اتحاد الطلاب | 🎭 المسرح
+
+**مثال:** "مواد قسم تربية فنية" أو "مواد إعلام تربوي"
+
+اكتب سؤالك أو اختار من الاقتراحات ⬇️`, false);
+        }, 300);
+    });
+    </script>
+</body>
+</html>
